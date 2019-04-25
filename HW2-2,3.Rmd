@@ -8,9 +8,19 @@ output:
       collapsed: true
       smooth_scroll: false
 params:
-  name: ["阿花","阿明"]
-  id: [710761001,710661002]
-  group: "team1"
+  id:
+  - 710761132
+  - 710761104
+  - 710761101
+  - 710761118
+  - 710761115
+  name:
+  - 林奕翔
+  - 張鈞硯
+  - 賴彥融
+  - 吳宥履
+  - 王童緯
+  group: "team b"
   url: ""
 ---
 請依狀況更改上面的name,id及group（分別代表組員姓名，學號及組號），但請勿更改下面三行的設定。  
@@ -36,7 +46,7 @@ params:
 
 # 1 實證應用
 Execute the following code lines to import fertil2 data frame. 
-```{r}
+```{r data1}
 library(readr)
 fertil2 <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/fertil2.csv")
 ```
@@ -48,17 +58,44 @@ Estimate the model:
 $$children=\beta_{0}+\beta_{1}educ+\beta_{2}age+\beta_{3}age^{2}+u$$
 by OLS, and interpret the estimates.
 
+```{r ans11,result='asis'}
+fertil2 $age^2 -> age2
+lm(children~educ+age+age2,fertil2) -> model_1
+summary(model_1)
+```
+
+
 ## 1.2
 The variable frsthalf is a dummy variable equal to one if the woman was born during the first six months of the year. Assuming that frsthalf is uncorrelated with the error term from 1.1, show that frsthalf is a reasonable IV candidate for educ. (Hint: you need to do a regression.)
+
+
+```{r ans12}
+
+```
 
 ## 1.3
 Estimate the model from part 1.1 by using frsthalf as an IV for educ. Compare the estimated effect of education with the OLS estiimate from 1.1.
 
+
+```{r ans13}
+
+```
+
 ## 1.4
 Add the binary variables electric, tv, and bicycle to the model and assume that these are exogenous. Estimate the equation by OLS and TSLS and compare the estimated coefficients on educ. Interpret the coefficient on tv and explain why television ownership has a negative effect on fertility.
 
+```{r ans14}
+
+```
+
+
 ## 1.5 
 Continue from 1.4, conduct Hausman test to see if OLS is valid for the study under a 5 percent test size.
+
+
+```{r ans15}
+
+```
 
 ## 1.6
 Can we test whether frsthalf is indeed exogenous for being an IV? why or why not?
@@ -66,10 +103,18 @@ Can we test whether frsthalf is indeed exogenous for being an IV? why or why not
 ## 1.7
 If we add one more IV catholic, can we test IV exogeneity? If yes, what is the test result under a 5 percent test size.
 
+
+```{r ans17}
+
+```
+
 ## 1.8
 Are frsthalf and catholic weak IVs?
 
 
+```{r ans18}
+
+```
 
 # 2 複迴歸與工具變數
 
@@ -95,6 +140,16 @@ $$Y=Y_{-p}+\beta^* P$$
 
 說明此時$E(Y|P)$中P的係數即為$\beta^*$.
 
+<table><tr><td bgcolor=#F5F5DC>
+\begin{align}
+&Y_{-P}=2+3rincome+\tilde\epsilon\\
+\\
+&Y=2+3rincome+\tilde\epsilon+\beta^*P\\
+\\
+&E(Y|P)=2+3rincome+\beta^*P
+\end{align}
+</td></tr></table>
+
 ## 2.2 立足點情境A.2
 
 此情境包含兩部份：
@@ -107,6 +162,27 @@ $$Y=Y_{-p}+\beta^* P$$
 
 說明此時$E(Y|P)$中P的係數「不」為$\beta^*$，但$E(Y|P,rincome)$中P的係數為$\beta^*$。
 
+<table><tr><td bgcolor=#F5F5DC>
+\begin{align}
+(1)E(Y|P)&=2+3E(rincome|P)+\beta^*P\\
+\\
+&=2+3(0.5+P)+\beta^*P\\
+\\
+&=3.5+(3+\beta^*)P
+\end{align}
+&nbsp;
+\begin{align}
+(2)&Y=Y_{-P}+\beta^{*}P=\tilde\epsilon+E(y_{-P}|rincome)+\beta^*P\\
+\\
+&E(Y|P,rincome)=E(2+3rincome)+E(\tilde\epsilon|P,rincome)+\beta^*P\\
+\\
+&=2+3rincome+0+\beta^*P\\
+\\
+&\because\tilde\epsilon\perp P|rincome\\
+&\therefore\text{the coefficient of P in}\,E(Y|P,income)=\beta^*
+\end{align}
+</td></tr></table>
+
 ## 2.3 立足點情境A.3
 
 考慮以下兩個情境條件：
@@ -118,6 +194,34 @@ $$Y=Y_{-p}+\beta^* P$$
 即P與$Y_{-p}$有關連：此關連性可來自於【A.2.2】中P與rincome的關連，也可來自於它與「非價格、非所得」引起的銷量之關連（即與$\tilde{\epsilon}$相關部份）
 
 若$E(\tilde{\epsilon}|P)=0.5+2P$，說明不論使用$E(Y|P)$或$E(Y|P,rincome)$，其P之係數都不會是$\beta^*$
+
+<table><tr><td bgcolor=#F5F5DC>
+\begin{align}
+(1)E(Y|P)&=2+3(0.5+P)+\beta^*P+0.5+2P\\
+\\
+&=2+1.5+3P+\beta^*P+0.5+2P\\
+\\
+&=4+(5+\beta^*)P\\
+\\
+E(Y_{-P}+\beta^*P|P)&=E[E(Y_{-P}|rincome)+\tilde\varepsilon|P]+\beta^*P\\
+\\
+&=E(2+3rincome|P)+E(\tilde\varepsilon|P)+\beta^*P\\
+\\
+&=2+3E(rincome|P)+0.5+2P+\beta^*P
+\end{align}
+&nbsp;
+\begin{align}
+(2)E(Y|P,rincome)&=E(Y_{-P}+\beta^*P|P,rincome)\\
+\\
+&=E[E(Y_{-P}|rincome)+\tilde\varepsilon|P,rincome]+\beta^*P\\
+\\
+&=E(2+3rincome)+E(\tilde\varepsilon|P,rincome)+\beta^*P\\
+\\
+&=2+3rincome+0.5+2P+\beta^*P\\
+\\
+&=2.5+3rincome+(2+\beta^*)P\\
+\end{align}
+</td></tr></table>
 
 ## 2.4 立足點情境A.3+效應情境B.1：TSLS
 
@@ -133,6 +237,26 @@ $$Y=Y_{-p}+\beta^* P$$
 
 若$E(\tilde{\epsilon}|P)=0.5+2P$，說明使用$E(Y|P_z,rincome)$其中$P_z$的係數會是$\beta^*$
 
+<table><tr><td bgcolor=#F5F5DC>
+\begin{align}
+&Y=Y_{-P,-rincome}+\beta^*P+\beta_{2}rincome+\tilde\epsilon\\
+\\
+&E(P|Z)+(P-E(P|z))\\
+\\
+&P=P_{z}+\tilde v,P_{z}=E(P|z)\\
+\\
+&Y=Y_{-P,-rincome}+\beta^*P_{z}+\beta_{2}rincome+\tilde\varepsilon+\beta^*\tilde v\\
+\\
+&E(Y|P_{z},rincome)=Y_{-P,rincome}+\beta^*P_{z}+\beta_{2}rincome\\
+\\
+&\because\tilde\varepsilon+\beta^*\tilde v\perp P_{z}\\
+\\
+&\therefore\text{The coefficient of}\,P_{z}\text{is}\,\beta^*\\
+\\
+&E(rinecome|P)=0.5+P=0.5+P_{z}+\tilde v
+\end{align}
+</td></tr></table>
+
 ## 2.5 立足點情境A.3+效應情境B.1：複迴歸
 
 承接上題情境，即
@@ -145,6 +269,24 @@ $$Y=Y_{-p}+\beta^* P$$
   
 說明使用$E(Y|P,rincome,z)$其中$P$的係
 數不會是$\beta^*$.
+
+<table><tr><td bgcolor=#F5F5DC>
+\begin{align}
+&Y=E(Y|P,rincome,z)+\tilde\varepsilon\\
+\\
+&Y=Y_{-P,rincome,-z}+\beta^*P+\beta_{2}rincome+\beta_{3}z+\tilde\varepsilon&(1)\\
+\\
+&P=\tilde v+P_{z}=\tilde v+(\alpha_{1}+\alpha_{2}z)\\
+\\
+&z=(P-\tilde v-\alpha_{1})\frac{1}{\alpha_{2}}\,\text{代入}(1)\\
+\\
+&Y=Y_{-P,-rincome,-z}+\beta^*P+\beta_{2}rincome+\frac{\beta_{3}}{\alpha_{2}}(P-\tilde v-\alpha_{1})+\tilde\varepsilon\\
+\\
+&Y=Y_{-P,-rincome,-z}+(\beta^*+\frac{\beta_{3}}{\alpha_{2}})P+\beta_{2}rincome+\frac{\beta_{3}}{\alpha_{2}}(-\tilde v-\alpha_{1})+\tilde\varepsilon\\
+\\
+&E(Y|P,rincome,z)=Y_{-P,rincome,-z}+(\beta^*+\frac{\beta_{3}}{\alpha_{2}})P+\beta_{2}rincome+\frac{\beta_{3}}{\alpha_{2}}(-\tilde v-\alpha_{1})+\tilde\varepsilon
+\end{align}
+</td></tr></table>
 
 # 3. 替代變數
 
@@ -164,10 +306,70 @@ $$y_i=\beta^* x_i+\gamma w_i+y_{-x,-w,i}$$
 $$\tilde{x}_i=x_i+\epsilon_i.$$
 請問效應解釋變數使用替代變數下，$\tilde{x}_i$的OLS估計式還有一致性嗎？（驗證$E(y_i|\tilde{x}_i,w_i)$中$\tilde{x_i}$的係數是否為$\beta^*$）要有一致性會需要什麼額外條件嗎？
 
+<table><tr><td bgcolor=#F5F5DC>
+\begin{align}
+&y_i=(\tilde x_{i}-\varepsilon_{i})\beta^*+\gamma w_{i}+y_{-x,-w,i}\\
+\\
+&\text{if}\,E(\varepsilon_{i}|\tilde x_{i})=\alpha_{1}+\alpha_2\tilde x\\
+\\
+&y_{i}=[\tilde x_{i}-(\alpha_{1}+\alpha_{2}\tilde x_{i})\beta^*+\gamma w_{i}+y_{-x_{i},-w_{i}}\\
+\\
+&E(y_{i}|\tilde x_{i},w_{i})=(1-\alpha_2)\beta^*\tilde x_{i}-\alpha_{1}\beta^*+\gamma w_{i}+y_{-x_{i},-w_{i},i}\\
+\\
+&\text{除非}\,E(\epsilon_{i}|\tilde x_i)=0,\,\tilde x_i\perp\epsilon_{i}\\
+\\
+&\Rightarrow E(y_{i}|\tilde x_{i},w_{i})=\tilde x_{i}\beta^*+\gamma w_{i}+y_{-x,-w,i}\\
+\\
+&\text{如果有一致性的話，需要}\tilde x_i\perp\varepsilon_{i}\text{才會有}
+\end{align}
+</td></tr></table>
+
 ## 3.2
 
 若我們沒有真正的$w_i$資料而改成使用它的替代變數$\tilde{w}_i$進行複迴歸，且令
 $$\tilde{w}_i=w_i+\epsilon_i.$$
 請問控制變數使用替代變數下，$x_i$的OLS估計式還有一致性嗎？（驗證$E(y_i|x_i,\tilde{w}_i)$中$x_i$的係數是否為$\beta^*$）要有一致性會需要什麼額外條件嗎？
 
-
+<table><tr><td bgcolor=#F5F5DC>
+\begin{align}
+&\text{用}\tilde w_{i}\text{替代}w_{i}\text{作為控制變數}，\tilde w_{i}\text{與}Y_{-x_{i}}\text{有關}，\tilde w_{i}\text{與}x_{i}\text{有關}\\
+\\
+&\text{訊息拆解：}\\
+&Y_{-x_{i}}=E(Y_{-x_{i}}|\tilde w_i)+(Y_{-x_{i}}-E(Y_{-x_{i}}|\tilde w_{i}))\\
+\\
+&Y_{i}=Y_{-x_{i}}-E(Y_{-x_{i}}|\tilde w_i)+E(Y_{-x_{i}}|\tilde w_{i})+\beta^*x_{i}\\
+\\
+&\text{令}Y_{-x,-\tilde w,i}=Y_{-x_{i}}-E(Y_{-x_{i}}|\tilde w_{i})\\
+\\
+&\rightarrow Y_{i}=Y_{-x_{i},-\tilde w_i}+E(Y_{-x_{i}}|\tilde w_{i})+\beta^*x_{i}\\
+\\
+&Y_{-x_{i},-\tilde w_i}:\\
+&1.與\tilde w無關\\
+&2.假設\tilde w_i不隨時間而改變，即E(Y_{-x_{i},t}|\tilde w_{i})=\alpha_{i}，\alpha_{i}為固定效果\\
+\\
+&Y_{it}=Y_{-x,-\tilde w,it}+\alpha_{i}+\beta^*x_{it}\\
+\\
+&Y_{i,0}=Y_{-x,-\tilde w,i0}+\alpha_{i}+\beta^*x_{i0}\\
+\\
+&Y_{i,1}=Y_{-x,-\tilde w,i0}+\alpha_{i}+\beta^*x_{i1}\\
+\\
+&回歸模型\\
+&Y_{i,1}-Y_{i,0}=\gamma_{0}+\gamma_{1}(x_{i1}-x_{i0})+v_{i}\\
+\\
+&OLS母體回歸\\
+&E(Y_{i1}-Y_{i0}|x_{i1}-x_{i0})=E(Y_{-x_{i},-\tilde w_i,i1}-Y_{-x_{i},-\tilde w_0}|x_{i1}-x_{i0})+\beta^*(x_{i1}-x_{i0})\\
+\\
+&\because Y_{-x_{i},-\tilde w_i,i1}\perp x_{i1},\,Y_{-x_{i},-\tilde w_i,i0}\perp x_{i0}\\
+\\
+&\therefore E(Y_{-x_{i},-\tilde w_i,i1}-Y_{-x_{i},-\tilde w_0}|x_{i1}-x_{i0})=E(Y_{-x_{i},-\tilde w_i,i1}-Y_{-x_{i},-\tilde w_0})=\gamma_{0}\\
+\\
+&\gamma_{1}(x_{i1}-x_{i0})=\beta^*(x_{i1}-x_{i0})\\
+\\
+&v_{i}=(Y_{-x_{i},-\tilde w_i,i1}-Y_{-x_{i},-\tilde w_0})-E(Y_{-x_{i},-\tilde w_i,i1}-Y_{-x_{i},-\tilde w_0})\\
+\\
+&\text{But we need a strong asswumption that}\\
+&Y_{-x_{i},-\tilde w_i,it}\perp x_{it}\,when\,s\neq t,\,so\\
+\\
+&(Y_{-x_{i},-\tilde w_i,i1}-Y_{-x_{i},-\tilde w_0})\perp(x_{i1}-x_{i0})
+\end{align}
+</td></tr></table>
